@@ -1,6 +1,6 @@
 package com.masterchef.data.collection.utils
 
-import com.masterchef.data.collection.models.{BookingMsg, TmpBookingMsg, TmpTrafficMsg, TrafficMessage}
+import com.masterchef.data.collection.models._
 import org.json4s.jackson.Serialization.write
 
 object MockDataProvider {
@@ -18,35 +18,37 @@ object MockDataProvider {
 
 
   // TODO: Needs to be made generic 
-  def appendTrafficLogTime(data: List[TmpTrafficMsg]) = {
+  def appendTrafficLogTime(data: List[TrafficMessage]):List[TimedTrafficMessage] = {
 
     data.map {
       e =>
-        TrafficMessage(
-          uid = e.uid,
-          origin = e.origin,
-          language = e.language,
-          ipv4 = e.ipv4,
-          device = e.device,
-          browser = e.browser,
-          os = e.os,
-          guest = e.guest,
+        TimedTrafficMessage(
+//          uid = e.uid,
+//          origin = e.origin,
+//          language = e.language,
+//          ipv4 = e.ipv4,
+//          device = e.device,
+//          browser = e.browser,
+//          os = e.os,
+//          guest = e.guest,
+          e.copy(),
           logTime = System.currentTimeMillis())
     }
   }
 
-  def appendBookingLogTime(data: List[TmpBookingMsg]) = {
+  def appendBookingLogTime(data: List[BookingMessage]):List[TimedBookingMessage] = {
 
     data.map {
       e =>
-        BookingMsg(
-          id = e.id,
-          value = e.value,
-          currency = e.currency,
-          mode = e.mode,
-          city = e.city,
-          hotel = e.hotel,
-          room = e.room,
+        TimedBookingMessage(
+//          id = e.id,
+//          value = e.value,
+//          currency = e.currency,
+//          mode = e.mode,
+//          city = e.city,
+//          hotel = e.hotel,
+//          room = e.room,
+          e.copy(),
           logTime = System.currentTimeMillis())
     }
   }
