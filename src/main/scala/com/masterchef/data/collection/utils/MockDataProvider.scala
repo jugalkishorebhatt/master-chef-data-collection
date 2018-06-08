@@ -1,53 +1,37 @@
 package com.masterchef.data.collection.utils
 
-import com.masterchef.data.collection.models.{BookingMsg, TmpBookingMsg, TmpTrafficMsg, TrafficMessage}
-import org.json4s.jackson.Serialization.write
+import java.util.Random
+
+import com.masterchef.data.collection.models._
 
 object MockDataProvider {
-  def getTrafficData = {
+  private val objRandom = new Random()
+
+  private lazy val trafficResponse: List[TrafficMessage] = {
+    println("Calling Traffic Response")
     val trafficUrl = ConfigProvider.getTrafficEndpoint
-    val res = HttpUtils.getResponse(trafficUrl)
-    FormatterUtils.parseJson(res)
+    var response = FormatterUtils.getCastedHttpResponse[TrafficMessage](trafficUrl)
+    response
   }
 
-  def getBookingData = {
+  def getTrafficData:List[String] = {
+    val trafficJsonData = FormatterUtils.getData[TrafficMessage](trafficResponse)
+    trafficJsonData
+  }
+
+  def getBookingData:List[String] = {
     val bookingUrl = ConfigProvider.getBookingEndpoint
-    val res = HttpUtils.getResponse(bookingUrl)
-    FormatterUtils.parseJson(res)
+    val response = FormatterUtils.getCastedHttpResponse[BookingMessage](bookingUrl)
+    val bookingData = FormatterUtils.getData(response)
+
+    bookingData
   }
 
-
-  // TODO: Needs to be made generic 
-  def appendTrafficLogTime(data: List[TmpTrafficMsg]) = {
-
-    data.map {
-      e =>
-        TrafficMessage(
-          uid = e.uid,
-          origin = e.origin,
-          language = e.language,
-          ipv4 = e.ipv4,
-          device = e.device,
-          browser = e.browser,
-          os = e.os,
-          guest = e.guest,
-          logTime = System.currentTimeMillis())
-    }
-  }
-
-  def appendBookingLogTime(data: List[TmpBookingMsg]) = {
-
-    data.map {
-      e =>
-        BookingMsg(
-          id = e.id,
-          value = e.value,
-          currency = e.currency,
-          mode = e.mode,
-          city = e.city,
-          hotel = e.hotel,
-          room = e.room,
-          logTime = System.currentTimeMillis())
-    }
+  def getTrafficGUID:String = {
+    val trafficResponse = MockDataProvider.trafficResponse
+    val lstTrafficUID = trafficResponse.map(element => element.uid)
+    val size = lstTrafficUID.length
+    val guid = lstTrafficUID(objRandom.nextInt(size))
+    guid
   }
 }

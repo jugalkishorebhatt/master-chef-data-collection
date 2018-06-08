@@ -1,15 +1,26 @@
 package com.masterchef.data.collection.utils
 
 import com.typesafe.config.ConfigFactory
+import collection.JavaConverters._
 
 object ConfigProvider {
-  private lazy val config = ConfigFactory.load("application.conf").getConfig("api.endpoint")
+  private lazy val configObj = ConfigFactory.load("application.conf")
+  private lazy val apiConfig = configObj.getConfig("api.endpoint")
+  private lazy val kafkaConfig = configObj.getConfig("kafka.producer")
 
   def getTrafficEndpoint:String = {
-    config.getString("traffic")
+    apiConfig.getString("traffic")
   }
 
   def getBookingEndpoint:String = {
-    config.getString("booking")
+    apiConfig.getString("booking")
+  }
+
+  def getKafkaBrokers:Array[String] = {
+    kafkaConfig.getStringList("brokers").asScala.toArray
+  }
+
+  def getKafkaTopic:String = {
+    kafkaConfig.getString("topic")
   }
 }
