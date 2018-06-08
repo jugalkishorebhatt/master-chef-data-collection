@@ -11,5 +11,3 @@ case class TrafficMessage (
                             os:String,
                             guest:Boolean
                           )
-
-//case class TimedTrafficMessage (trafficMessage:TrafficMessage,logTime:Long)
